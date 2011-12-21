@@ -1,2 +1,2 @@
-game.js
-game.min.js
+syntax: regexp
+^bin/
