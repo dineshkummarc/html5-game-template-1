@@ -11,6 +11,9 @@ if [ $? -ne 0 ] ; then
 	exit
 fi
 
-echo "Minifying..."
 
+echo "Minifying..."
 java -jar lib/compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS --js bin/game.js --js_output_file bin/game.min.js
+
+echo "'use strict';" | cat - bin/game.js | tee bin/game.js > /dev/null
+echo -n "'use strict';" | cat - bin/game.min.js | tee bin/game.min.js > /dev/null
