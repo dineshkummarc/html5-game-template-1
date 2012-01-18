@@ -1,15 +1,14 @@
 echo "Compiling..."
 
 find src/ -name '*.coffee' \
-| grep -Ev '^src/main.coffee$' \
-| xargs cat \
-| cat - src/main.coffee \
-| java -cp .:lib/js.jar org.mozilla.javascript.tools.shell.Main lib/compile.js
+| xargs java -cp .:lib/js.jar org.mozilla.javascript.tools.shell.Main lib/compile.js
 
 if [ $? -ne 0 ] ; then
 	echo "CoffeeScript compilation failed"
 	exit
 fi
+
+exit
 
 
 echo "Minifying..."
