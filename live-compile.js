@@ -18,16 +18,37 @@ function getMime(file) {
 }
 
 function recompile(callback) {
-	console.log('Recompile!');
-	callback();
+	var compile = spawn('sh', ['compile.sh']);
+	var error = '';
+
+	compile.stderr.on('data', function (data) {
+		error += data;
+	});
+
+	compile.on('exit', function (code) {
+		if (!error.length) {
+			return callback();
+		}
+
+		error = error.replace(/\\/g, '\\')
+		.replace(/'/g, "\\'")
+		.replace(/[\r\n]+/g, '\\n');
+
+		error = "console.error('" + error + "');";
+		fs.writeFile('bin/game.js', error, callback);
+	});
 }
 
-function serveFile(file, response) {
+function serveFile(file, response, noCache) {
+	var headers = {};
 	fs.stat(file, function (err, stats) {
-		response.writeHead(200, {
-			'Content-Type': getMime(file),
-			'Content-Length': stats.size
-		});
+		headers['Content-Type'] = getMime(file);
+		headers['Content-Length'] = stats.size;
+		if (noCache) {
+			headers['Cache-Control'] = 'no-cache, must-revalidate';
+		}
+
+		response.writeHead(200, headers);
 
 		fs.readFile(file, function (err, data) {
 			response.write(data);
@@ -37,13 +58,11 @@ function serveFile(file, response) {
 }
 
 http.createServer(function (request, response) {
-	console.log(request.url);
-
 	var file = '.' + request.url;
 
 	if (file === './bin/game.js') {
 		return recompile(function () {
-			serveFile(file, response);
+			serveFile(file, response, true);
 		});
 	}
 
