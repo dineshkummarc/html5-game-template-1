@@ -26,6 +26,8 @@ File Structure
 
 * `index.html` - This HTML file will execute the compiled `game.js` file.
 
+* `live-compile.js` - This small NodeJS app will provide a local server that automatically compiles/bundles your CoffeeScript code every time you refresh!
+
 About
 ---
 This template was written by (and mostly for) Matt Campbell. http://code.mattcampbell.net
@@ -34,5 +36,5 @@ Technologies/Libraries used:
 
 * [CoffeeScript](jashkenas.github.com/coffee-script/)
 * [Google Closure](http://code.google.com/closure/) - JavaScript optimizer and minifier
-* [r.js](https://github.com/jrburke/r.js) - RequireJS optimizer
+* [r.js](https://github.com/jrburke/r.js) - [RequireJS](http://requirejs.org/) optimizer
 * [almond](https://github.com/jrburke/almond) - r.js wrapper which removes RequireJS dependency from the final files

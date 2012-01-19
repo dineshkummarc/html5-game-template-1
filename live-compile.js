@@ -4,10 +4,10 @@ var spawn = require('child_process').spawn;
 
 var port = 1234;
 if (process.argv.length > 2 && !isNaN(+process.argv[2])) {
-	port = +process.argv[2]
+	port = +process.argv[2];
 }
 
-var mimes = JSON.parse(fs.readFileSync('lib/mimes.json', 'utf-8'))
+var mimes = JSON.parse(fs.readFileSync('lib/mimes.json', 'utf8'));
 function getMime(file) {
 	var ext = file.match(/\.([^.]+)$/);
 	if (!ext || !ext.length || !mimes[ext[1]]) {
@@ -51,14 +51,17 @@ function serveFile(file, response, noCache) {
 		response.writeHead(200, headers);
 
 		fs.readFile(file, function (err, data) {
-			response.write(data);
-			response.end();
+			response.end(data);
 		});
 	});
 }
 
 http.createServer(function (request, response) {
 	var file = '.' + request.url;
+
+	if (file === './') {
+		file = './index.html';
+	}
 
 	if (file === './bin/game.js') {
 		return recompile(function () {
